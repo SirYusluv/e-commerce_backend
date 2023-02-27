@@ -6,9 +6,10 @@ import express, {
 } from "express";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
-import { AuthRouter } from "./auth/auth.controller";
+import { AuthRouter } from "./auth/auth.router";
 import { IResponse } from "./util/data";
 import { createLogManager } from "simple-node-logger";
+import { UserRouter } from "./user/user.router";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -18,6 +19,7 @@ app.use(express.json());
 const logger = createLogManager().createLogger("APP.ts");
 
 app.use("/auth", AuthRouter);
+app.use("/user", UserRouter);
 
 const errorHandler: ErrorRequestHandler = function (
   err: any,
