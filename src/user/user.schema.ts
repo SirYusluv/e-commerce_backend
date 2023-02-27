@@ -1,4 +1,4 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 import { ACCOUNT_TYPES, CREATED_BY } from "../util/data";
 
 interface IUser {
