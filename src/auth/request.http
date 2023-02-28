@@ -17,3 +17,15 @@ Content-Type: application/json
     "emailAddress": "vmuel@gmail.com",
     "password": "123456789"
 }
+
+### forgetPassword
+GET http://localhost:3000/auth//send-password-reset-mail/vmuel@gmail.com
+Content-Type: application/json
+
+### resetPassword
+POST http://localhost:3000/auth/reset-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFpbC5jb20iLCJpYXQiOjE2Nzc2MDAzNzR9.ru9cxc0FZ1xCJ0PdKsfsC26NNLU8FKqL43lTSAlafb
+Content-Type: application/json
+
+{
+    "password": "0123456789"
+}

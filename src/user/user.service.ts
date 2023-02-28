@@ -8,6 +8,7 @@ import {
   SPLIT_PATTERN,
 } from "../util/data";
 import { createLogManager } from "simple-node-logger";
+import { ChangePasswordDto } from "../auth/dtos/change-password.dto";
 
 const logger = createLogManager().createLogger("UserService.ts");
 
@@ -32,6 +33,16 @@ export const createUser = async function (createUserDto: CreateUserDto) {
     );
   }
 };
+
+export async function changePasswordForEmail(
+  changePasswordDto: ChangePasswordDto
+) {
+  const user = await findUserWithEmail(changePasswordDto.emailAddress!);
+  if (!user) return user;
+
+  user.password = await bcrypt.hash(changePasswordDto.password!, BCRYPT_SALT);
+  return user.save();
+}
 
 export const findUserWithEmail = async function (emailAddress: string) {
   try {
