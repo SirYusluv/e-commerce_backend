@@ -20,6 +20,10 @@ export const MONGOOSE_STATUS = {
   duplicateError: 11000,
 };
 
+export const JWT_ERROR = {
+  invalidSignature: "invalid signature",
+};
+
 export interface IResponse {
   message: string;
   status: number;

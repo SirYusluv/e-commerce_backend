@@ -4,7 +4,12 @@ import {
   createUser,
   findUserWithEmail,
 } from "../user/user.service";
-import { EMAIL_ADDR_PATTERN, HTTP_STATUS, IResponse } from "../util/data";
+import {
+  EMAIL_ADDR_PATTERN,
+  HTTP_STATUS,
+  IResponse,
+  JWT_ERROR,
+} from "../util/data";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { SignInUserDto } from "./dtos/signin-user.dto";
 import * as bcrypt from "bcrypt";
@@ -61,7 +66,7 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
       _id: user._id.toString(),
       emailAddress: user.emailAddress,
     };
-    signedInUser.accessToken = genAccessToken(token);
+    signedInUser.accessToken = genJwtToken(token)!;
     res.status(HTTP_STATUS.ok).json(signedInUser);
   } catch (err: any) {
     next(err);
@@ -95,10 +100,9 @@ export async function sendPasswordResetMail(
 
     // log the reset link since we don't have the resouce to send mail
     logger.info([
-      `${req.headers.host}/auth/reset-password/${jwt.sign(
-        { emailAddress },
-        process.env.JWT_SECRET!
-      )}`,
+      `${req.headers.host}/auth/reset-password/${genJwtToken({
+        emailAddress,
+      })}`,
     ]);
   } catch (err: any) {
     next(err);
@@ -114,9 +118,7 @@ export async function resetPassword(
     const { emailAddress } = jwt.verify(
       req.params.id,
       process.env.JWT_SECRET!
-    ) as { emailAddress: string };
-
-    console.log("kn\n\n\nn\n\n\n\nggg");
+    ) as { emailAddress: string; [key: string]: any };
 
     const changePasswordDto = new ChangePasswordDto(
       emailAddress,
@@ -136,10 +138,23 @@ export async function resetPassword(
     };
     res.status(response.status).json(response);
   } catch (err: any) {
+    if (err.message === JWT_ERROR.invalidSignature) {
+      const response: IResponse = {
+        message: "You are not authorized to reset this password.",
+        status: HTTP_STATUS.unauthorized,
+      };
+      return res.status(response.status).json(response);
+    }
     next(err);
   }
 }
 
-export function genAccessToken(token: string | object) {
-  return jwt.sign(token, process.env.JWT_SECRET!);
+export function genJwtToken(token: string | object) {
+  try {
+    const accessToken = jwt.sign(token, process.env.JWT_SECRET!);
+    return accessToken;
+  } catch (err: any) {
+    logger.error("fhj: ", err);
+    throw err;
+  }
 }
