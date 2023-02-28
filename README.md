@@ -15,5 +15,5 @@ $ npm install
 $ npm start
 
 # Start Typescript in watch mode
-$ npm tsc
+$ npm run tsw
 ```

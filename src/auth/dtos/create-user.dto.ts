@@ -1,4 +1,11 @@
-import { HTTP_STATUS, SPLIT_PATTERN } from "../../util/data";
+import {
+  EMAIL_ADDR_PATTERN,
+  HTTP_STATUS,
+  NAME_MAX_LENGTH,
+  NAME_MIN_LENGTH,
+  PASSWORD_MIN_LENHT,
+  SPLIT_PATTERN,
+} from "../../util/data";
 
 export class CreateUserDto {
   firstName: string | null = null;
@@ -19,37 +26,36 @@ export class CreateUserDto {
   }
 
   private setFirstName(firstName: string) {
-    if (firstName.length < 1 || firstName.length > 15)
+    if (
+      firstName.length < NAME_MIN_LENGTH ||
+      firstName.length > NAME_MAX_LENGTH
+    )
       throw new Error(
-        `First name length must be within the range of  - 15${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
+        `First name length must be within the range of ${NAME_MIN_LENGTH} - ${NAME_MAX_LENGTH}.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
       );
     this.firstName = firstName;
   }
 
   private setLastName(lastName: string) {
-    if (lastName.length < 1 || lastName.length > 15)
+    if (lastName.length < NAME_MIN_LENGTH || lastName.length > NAME_MAX_LENGTH)
       throw new Error(
-        `Last name length must be within the range of  - 15${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
+        `Last name length must be within the range of ${NAME_MIN_LENGTH} - ${NAME_MAX_LENGTH}.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
       );
     this.lastName = lastName;
   }
 
   private setEmailAddress(emailAddress: string) {
-    if (
-      !emailAddress.match(
-        /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
-      )
-    )
+    if (!emailAddress.match(EMAIL_ADDR_PATTERN))
       throw new Error(
-        `Invalid email address provided${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
+        `Invalid email address provided.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
       );
     this.emailAddress = emailAddress;
   }
 
   private setPassword(password: string) {
-    if (password.length < 7)
+    if (password.length < PASSWORD_MIN_LENHT)
       throw new Error(
-        `Password length must be greather than 7${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
+        `Password length must be greather than ${PASSWORD_MIN_LENHT}.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
       );
     this.password = password;
   }

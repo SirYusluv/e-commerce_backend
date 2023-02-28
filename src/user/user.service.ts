@@ -32,3 +32,13 @@ export const createUser = async function (createUserDto: CreateUserDto) {
     );
   }
 };
+
+export const findUserWithEmail = async function (emailAddress: string) {
+  try {
+    const user = await User.findOne({ emailAddress }).populate("password");
+    return user;
+  } catch (err: any) {
+    logger.error(err);
+    throw err;
+  }
+};
