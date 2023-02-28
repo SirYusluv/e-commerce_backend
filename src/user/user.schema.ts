@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { ACCOUNT_TYPES, CREATED_BY } from "../util/data";
+import { ACCOUNTS, ACCOUNT_TYPES, CREATED_BY, CREATOR } from "../util/data";
 
 interface IUser {
   emailAddress: string;
@@ -15,10 +15,10 @@ const UserSchema = new Schema<IUser>({
   emailAddress: { type: String, unique: true, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  password: { type: String, required: true },
-  accountType: { type: String, required: true },
-  createdBy: { type: String, required: true },
+  password: { type: String, required: true, select: 0 },
+  accountType: { type: String, default: ACCOUNTS.user },
+  createdBy: { type: String, default: CREATOR.self },
   createdDate: { type: Date, default: Date.now },
 });
 
-const User = model<IUser>("User", UserSchema);
+export const User = model<IUser>("User", UserSchema);

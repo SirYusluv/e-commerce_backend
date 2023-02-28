@@ -7,7 +7,7 @@ import express, {
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import { AuthRouter } from "./auth/auth.router";
-import { IResponse } from "./util/data";
+import { HTTP_STATUS, IResponse, SPLIT_PATTERN } from "./util/data";
 import { createLogManager } from "simple-node-logger";
 import { UserRouter } from "./user/user.router";
 
@@ -27,13 +27,24 @@ const errorHandler: ErrorRequestHandler = function (
   res: Response,
   _1: NextFunction
 ) {
-  const resMsg: IResponse = {
-    message: err.message || "Error processing your request, please try later.",
-    status: 500,
-  };
-  res.status(500).json();
+  try {
+    const errMsgAndStatus = (err.message as string).split(SPLIT_PATTERN);
+    const message = errMsgAndStatus[0];
+    const status = Number(errMsgAndStatus[1]);
+    const resMsg: IResponse = {
+      message: message || "Error processing your request, please try later.",
+      status: status || HTTP_STATUS.internalServerError,
+    };
+    res.status(status).json(resMsg);
 
-  logger.error(err);
+    logger.error(err);
+  } catch (e: any) {
+    res.status(HTTP_STATUS.internalServerError).json({
+      message: "Error processing your request, please try later.",
+      status: HTTP_STATUS.internalServerError,
+    });
+    logger.error(e);
+  }
 };
 
 app.use(errorHandler);
