@@ -5,6 +5,7 @@ import {
   findUserWithEmail,
 } from "../user/user.service";
 import {
+  ACCOUNT_TYPES,
   EMAIL_ADDR_PATTERN,
   HTTP_STATUS,
   IResponse,
@@ -22,6 +23,8 @@ const logger = createLogManager().createLogger("AuthService.ts");
 export interface IAccessToken {
   _id: string;
   emailAddress: string;
+  accountType: ACCOUNT_TYPES;
+  [key: string]: string; // since jwt can add some metadata like 'iat' (isseud at)
 }
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
@@ -63,8 +66,9 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
       user.toObject()
     );
     const token: IAccessToken = {
-      _id: user._id.toString(),
-      emailAddress: user.emailAddress,
+      _id: signedInUser._id.toString(),
+      emailAddress: signedInUser.emailAddress,
+      accountType: signedInUser.accountType,
     };
     signedInUser.accessToken = genJwtToken(token)!;
     res.status(HTTP_STATUS.ok).json(signedInUser);

@@ -10,6 +10,7 @@ import { AuthRouter } from "./auth/auth.router";
 import { HTTP_STATUS, IResponse, SPLIT_PATTERN } from "./util/data";
 import { createLogManager } from "simple-node-logger";
 import { UserRouter } from "./user/user.router";
+import { isAuthenticatedGuard } from "./guards/is-authenticated.guard";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -19,7 +20,7 @@ app.use(express.json());
 const logger = createLogManager().createLogger("APP.ts");
 
 app.use("/auth", AuthRouter);
-app.use("/user", UserRouter);
+app.use("/user", isAuthenticatedGuard, UserRouter);
 
 const errorHandler: ErrorRequestHandler = function (
   err: any,
