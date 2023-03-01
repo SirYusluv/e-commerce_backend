@@ -22,6 +22,7 @@ export const MONGOOSE_STATUS = {
 
 export const JWT_ERROR = {
   invalidSignature: "invalid signature",
+  jwtMalformed: "jwt malformed",
 };
 
 export interface IResponse {

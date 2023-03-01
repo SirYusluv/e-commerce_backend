@@ -3,18 +3,24 @@ import { User } from "./user.schema";
 import * as bcrypt from "bcrypt";
 import {
   BCRYPT_SALT,
+  CREATOR,
   HTTP_STATUS,
   MONGOOSE_STATUS,
   SPLIT_PATTERN,
 } from "../util/data";
 import { createLogManager } from "simple-node-logger";
 import { ChangePasswordDto } from "../auth/dtos/change-password.dto";
+import { UserAdminCreateUserDto } from "./dtos/user-admin-create-user.dto";
 
 const logger = createLogManager().createLogger("UserService.ts");
 
-export const createUser = async function (createUserDto: CreateUserDto) {
+export const createUser = async function (
+  userToCreate: CreateUserDto | UserAdminCreateUserDto
+) {
   try {
-    const user = new User(createUserDto);
+    const user = new User(userToCreate);
+    if (userToCreate instanceof UserAdminCreateUserDto)
+      user.createdBy = CREATOR.userAdmin;
     user.password = await bcrypt.hash(user.password, BCRYPT_SALT);
     const createdUser = await user.save();
     return createdUser;

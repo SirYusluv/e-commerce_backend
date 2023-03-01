@@ -1,4 +1,4 @@
-import { HTTP_STATUS, SPLIT_PATTERN } from "./data";
+import { ACCOUNTS, HTTP_STATUS, SPLIT_PATTERN } from "./data";
 
 export function extractTokenFromBearer(bearerToken: string) {
   if (!bearerToken.startsWith("Bearer ")) {
@@ -7,4 +7,8 @@ export function extractTokenFromBearer(bearerToken: string) {
     );
   }
   return bearerToken.split(" ")[1];
+}
+
+export function getSupportedAccounts() {
+  return Object.entries(ACCOUNTS).map((account, _, _1) => account[1]);
 }

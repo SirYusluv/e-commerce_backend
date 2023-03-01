@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { IAccessToken } from "../auth/auth.service";
-import { User } from "../user/user.schema";
 import { findUserWithEmail } from "../user/user.service";
-import { HTTP_STATUS, IResponse } from "../util/data";
+import { HTTP_STATUS, IResponse, JWT_ERROR } from "../util/data";
 import { extractTokenFromBearer } from "../util/helper";
 
 export async function isAuthenticatedGuard(
@@ -29,6 +28,16 @@ export async function isAuthenticatedGuard(
     req.body.user = user;
     next();
   } catch (err: any) {
+    if (
+      err.message === JWT_ERROR.invalidSignature ||
+      err.message === JWT_ERROR.jwtMalformed
+    ) {
+      const response: IResponse = {
+        message: "You are not authorized access the requested resource.",
+        status: HTTP_STATUS.unauthorized,
+      };
+      return res.status(response.status).json(response);
+    }
     next(err);
   }
 }

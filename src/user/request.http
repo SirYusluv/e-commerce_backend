@@ -1,0 +1,12 @@
+#User admin - create user
+POST http://localhost:3000/user/user-admin/create-user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2ZmMzliM2U3YmE5Njc1Mjc4MzgwY2QiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3NzY3MDg3OX0.uPZZAHfssyYw7MbmJxm5uzf1zIH5GfucZcQtRuxElm4
+Content-Type: application/json
+
+{
+    "firstName": "Yusuf",
+    "lastName": "Damola",
+    "emailAddress": "an@emi.com",
+    "password": "simplepass",
+    "accountType": "USER"
+}

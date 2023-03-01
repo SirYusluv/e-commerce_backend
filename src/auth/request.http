@@ -5,7 +5,7 @@ Content-Type: application/json
 {
     "firstName": "Yusuf",
     "lastName": "Olanrewaju",
-    "emailAddress": "vmuel@gmail.com",
+    "emailAddress": "vmuel@gmal.com",
     "password": "123456789"
 }
 
@@ -14,8 +14,8 @@ POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
 {
-    "emailAddress": "vmuel@gmail.com",
-    "password": "0123456789"
+    "emailAddress": "vmuel@gmal.com",
+    "password": "123456789"
 }
 
 ### forgetPassword

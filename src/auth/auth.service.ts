@@ -36,10 +36,10 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
       emailAddress,
       password
     );
-    const { password: pass, ...createdUser } = await (
+    const { password: _, ...createdUser } = await (
       await createUser(createUserDto)
     ).toObject();
-    res.status(201).json(createdUser);
+    res.status(HTTP_STATUS.created).json(createdUser);
   } catch (e: any) {
     next(e);
   }
@@ -142,7 +142,10 @@ export async function resetPassword(
     };
     res.status(response.status).json(response);
   } catch (err: any) {
-    if (err.message === JWT_ERROR.invalidSignature) {
+    if (
+      err.message === JWT_ERROR.invalidSignature ||
+      err.message === JWT_ERROR.jwtMalformed
+    ) {
       const response: IResponse = {
         message: "You are not authorized to reset this password.",
         status: HTTP_STATUS.unauthorized,
