@@ -29,11 +29,6 @@ export const JWT_ERROR = {
 export interface IResponse {
   message: string;
   status: number;
-}
-
-export interface IExtendedResponse {
-  message: string;
-  status: string;
   [key: string]: any;
 }
 

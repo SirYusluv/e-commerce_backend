@@ -6,7 +6,6 @@ import {
   BCRYPT_SALT,
   CREATOR,
   HTTP_STATUS,
-  IExtendedResponse,
   IResponse,
   MONGOOSE_STATUS,
   SPLIT_PATTERN,
@@ -14,8 +13,10 @@ import {
 import { createLogManager } from "simple-node-logger";
 import { ChangePasswordDto } from "../auth/dtos/change-password.dto";
 import { UserAdminCreateUserDto } from "./dtos/user-admin-create-user.dto";
+import { FindUsersDto } from "./dtos/find-users.dto";
 import { NextFunction, Request, Response } from "express";
 import { ModifyUserDto } from "./dtos/modify-user.dto";
+import { getSupportedAccounts } from "../util/helper";
 
 const logger = createLogManager().createLogger("UserService.ts");
 
@@ -89,12 +90,26 @@ export async function modifyUser(
 
     const { password: _, ...userToSendAsResponse } = user.toObject();
 
-    const response: IExtendedResponse = {
+    const response: IResponse = {
       message: "User data modified successfully.",
-      status: HTTP_STATUS.created.toString(),
+      status: HTTP_STATUS.created,
       user: userToSendAsResponse,
     };
-    res.status(Number(response.status)).json(response);
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
+
+export function getUser(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { password, ...user } = (req.body.user as UserType).toObject();
+    const response: IResponse = {
+      message: "",
+      status: HTTP_STATUS.ok,
+      user,
+    };
+    res.status(response.status).json(response);
   } catch (err: any) {
     next(err);
   }
@@ -145,3 +160,29 @@ export const findUserWithEmail = async function (emailAddress: string) {
     throw err;
   }
 };
+
+export async function findUsers(
+  findUsersDto: FindUsersDto,
+  limit: number = 10,
+  skip: number = 0
+) {
+  try {
+    const userQuery = User.find();
+
+    findUsersDto.firstName &&
+      userQuery.where("firstName", findUsersDto.firstName);
+    findUsersDto.lastName && userQuery.where("lastName", findUsersDto.lastName);
+    findUsersDto.address && userQuery.where("address", findUsersDto.address);
+    findUsersDto.contact && userQuery.where("contact", findUsersDto.contact);
+    findUsersDto.isBlocked === true || findUsersDto.isBlocked === false
+      ? userQuery.where("firstName", findUsersDto.firstName)
+      : "";
+    getSupportedAccounts().includes(findUsersDto.accountType as any) &&
+      userQuery.where("accountType", findUsersDto.accountType);
+
+    return userQuery.limit(limit).skip(skip).exec();
+  } catch (err: any) {
+    logger.error(err);
+    throw err;
+  }
+}
