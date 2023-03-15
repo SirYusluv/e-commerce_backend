@@ -12,7 +12,7 @@ $ npm install
 
 ```bash
 # development
-$ npm start
+$ npm run dev
 
 # Start Typescript in watch mode
 $ npm run tsw

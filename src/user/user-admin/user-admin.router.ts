@@ -3,4 +3,4 @@ import { userAdminCreateUser } from "./user-admin.service";
 
 export const UserAdminRouter = Router();
 
-UserAdminRouter.use("/create-user", userAdminCreateUser);
+UserAdminRouter.post("/create-user", userAdminCreateUser);

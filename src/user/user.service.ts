@@ -1,18 +1,104 @@
 import { CreateUserDto } from "../auth/dtos/create-user.dto";
-import { User } from "./user.schema";
+import { User, UserType } from "./user.schema";
 import * as bcrypt from "bcrypt";
 import {
+  ACCOUNTS,
   BCRYPT_SALT,
   CREATOR,
   HTTP_STATUS,
+  IExtendedResponse,
+  IResponse,
   MONGOOSE_STATUS,
   SPLIT_PATTERN,
 } from "../util/data";
 import { createLogManager } from "simple-node-logger";
 import { ChangePasswordDto } from "../auth/dtos/change-password.dto";
 import { UserAdminCreateUserDto } from "./dtos/user-admin-create-user.dto";
+import { NextFunction, Request, Response } from "express";
+import { ModifyUserDto } from "./dtos/modify-user.dto";
 
 const logger = createLogManager().createLogger("UserService.ts");
+
+export async function modifyUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const {
+      emailAddress: emailAddressQr,
+      firstName: firstNameQr,
+      lastName: lastNameQr,
+      address: addressQr,
+      contact: contactQr,
+      isBlocked: isBlockedQr,
+    } = req.query;
+
+    const { emailAddress, firstName, lastName, address, contact, isBlocked } = {
+      emailAddress: emailAddressQr?.toString(),
+      firstName: firstNameQr?.toString(),
+      lastName: lastNameQr?.toString(),
+      address: addressQr?.toString(),
+      contact: contactQr?.toString(),
+      isBlocked:
+        isBlockedQr?.toString() === "true"
+          ? true
+          : isBlockedQr?.toString() === "false"
+          ? false
+          : undefined,
+    };
+    const { password } = req.body;
+    const user = req.body.user as UserType;
+
+    const modifyUserDto = new ModifyUserDto(
+      firstName,
+      lastName,
+      emailAddress,
+      password,
+      address,
+      contact,
+      isBlocked
+    );
+
+    // only admin has the permission to set isBlock
+    if (modifyUserDto.isBlocked && user.accountType !== ACCOUNTS.userAdmin) {
+      const response: IResponse = {
+        message: "You are not authorized to block or unblock any user.",
+        status: HTTP_STATUS.unauthorized,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    user.firstName = modifyUserDto.firstName || user.firstName;
+    user.lastName = modifyUserDto.lastName || user.lastName;
+    user.emailAddress = modifyUserDto.emailAddress || user.emailAddress;
+    user.password = modifyUserDto.password || user.password;
+    user.address = modifyUserDto.address || user.address;
+    user.contact = modifyUserDto.contact || user.contact;
+    user.isBlocked =
+      modifyUserDto.isBlocked === true
+        ? modifyUserDto.isBlocked
+        : modifyUserDto.isBlocked === false
+        ? false
+        : user.isBlocked;
+    user.password = !!modifyUserDto.password
+      ? await bcrypt.hash(modifyUserDto.password, BCRYPT_SALT)
+      : user.password;
+
+    await user.save();
+
+    const { password: _, ...userToSendAsResponse } = user.toObject();
+
+    const response: IExtendedResponse = {
+      message: "User data modified successfully.",
+      status: HTTP_STATUS.created.toString(),
+      user: userToSendAsResponse,
+    };
+    res.status(Number(response.status)).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
 
 export const createUser = async function (
   userToCreate: CreateUserDto | UserAdminCreateUserDto

@@ -17,6 +17,7 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { createLogManager } from "simple-node-logger";
 import { ChangePasswordDto } from "./dtos/change-password.dto";
+import { emailIsValid } from "../util/helper";
 
 const logger = createLogManager().createLogger("AuthService.ts");
 
@@ -68,7 +69,7 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
     const token: IAccessToken = {
       _id: signedInUser._id.toString(),
       emailAddress: signedInUser.emailAddress,
-      accountType: signedInUser.accountType,
+      accountType: signedInUser.accountType!!,
     };
     signedInUser.accessToken = genJwtToken(token)!;
     res.status(HTTP_STATUS.ok).json(signedInUser);
@@ -85,7 +86,7 @@ export async function sendPasswordResetMail(
   try {
     const emailAddress = req.params.email || "";
     if (
-      !emailAddress.match(EMAIL_ADDR_PATTERN) ||
+      !emailIsValid(emailAddress) ||
       !(await findUserWithEmail(emailAddress))
     ) {
       const message: IResponse = {

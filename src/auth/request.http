@@ -15,11 +15,11 @@ Content-Type: application/json
 
 {
     "emailAddress": "vmuel@gmal.com",
-    "password": "123456789"
+    "password": "0000000"
 }
 
 ### forgetPassword
-GET http://localhost:3000/auth//send-password-reset-mail/vmuel@gmail.com
+GET http://localhost:3000/auth/send-password-reset-mail/vmuel@gmail.com
 Content-Type: application/json
 
 ### resetPassword

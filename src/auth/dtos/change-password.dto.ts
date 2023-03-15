@@ -4,6 +4,7 @@ import {
   PASSWORD_MIN_LENHT,
   SPLIT_PATTERN,
 } from "../../util/data";
+import { emailIsValid } from "../../util/helper";
 
 export class ChangePasswordDto {
   emailAddress: string | null = null;
@@ -15,7 +16,7 @@ export class ChangePasswordDto {
   }
 
   private setEmailAddress(emailAddress: string) {
-    if (!emailAddress.match(EMAIL_ADDR_PATTERN))
+    if (!emailIsValid(emailAddress))
       throw new Error(
         `Invalid email address provided.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
       );

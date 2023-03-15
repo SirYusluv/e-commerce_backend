@@ -1,6 +1,6 @@
 #User admin - create user
 POST http://localhost:3000/user/user-admin/create-user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2ZmMzliM2U3YmE5Njc1Mjc4MzgwY2QiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3NzY3MDg3OX0.uPZZAHfssyYw7MbmJxm5uzf1zIH5GfucZcQtRuxElm4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2ZmMzliM2U3YmE5Njc1Mjc4MzgwY2QiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3ODg3NTY4OX0.WSYY8AjpQc2Q2l05LoaK_6SAm7YtoiP6xSqwq2SSNfY
 Content-Type: application/json
 
 {
@@ -9,4 +9,13 @@ Content-Type: application/json
     "emailAddress": "an@emi.com",
     "password": "simplepass",
     "accountType": "USER"
+}
+
+### modify user data
+PATCH http://localhost:3000/user/user?lastName=Kareem
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2ZmMzliM2U3YmE5Njc1Mjc4MzgwY2QiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3ODg3NTY4OX0.WSYY8AjpQc2Q2l05LoaK_6SAm7YtoiP6xSqwq2SSNfY
+Content-Type: application/json
+
+{
+    "password": "0000000"
 }

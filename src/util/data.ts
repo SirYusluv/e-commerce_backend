@@ -5,6 +5,7 @@ export const EMAIL_ADDR_PATTERN =
 export const PASSWORD_MIN_LENHT = 7;
 export const NAME_MIN_LENGTH = 1;
 export const NAME_MAX_LENGTH = 15;
+export const ADDRESS_MIN_LENGTH = 2;
 
 export const HTTP_STATUS = {
   ok: 200,
@@ -28,6 +29,12 @@ export const JWT_ERROR = {
 export interface IResponse {
   message: string;
   status: number;
+}
+
+export interface IExtendedResponse {
+  message: string;
+  status: string;
+  [key: string]: any;
 }
 
 export type ACCOUNT_TYPES = "USER_ADMIN" | "USER" | "ACCOUNT" | "SALES";

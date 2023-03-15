@@ -1,4 +1,9 @@
-import { ACCOUNTS, HTTP_STATUS, SPLIT_PATTERN } from "./data";
+import {
+  EMAIL_ADDR_PATTERN,
+  ACCOUNTS,
+  HTTP_STATUS,
+  SPLIT_PATTERN,
+} from "./data";
 
 export function extractTokenFromBearer(bearerToken: string) {
   if (!bearerToken.startsWith("Bearer ")) {
@@ -11,4 +16,14 @@ export function extractTokenFromBearer(bearerToken: string) {
 
 export function getSupportedAccounts() {
   return Object.entries(ACCOUNTS).map((account, _, _1) => account[1]);
+}
+
+export function emailIsValid(emailAddress: string) {
+  return EMAIL_ADDR_PATTERN.test(emailAddress);
+}
+
+export function contactIsValid(contact: string) {
+  return (
+    contact.length === 11 && contact.startsWith("0") && /^[0-9]+$/.test(contact)
+  );
 }
