@@ -42,6 +42,11 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
       (categoriesStrArr.split(",") as string[]).map(async function (category) {
         let fetchedCategory: CategoryType | null;
         fetchedCategory = await findCategory({ category });
+        //increment category reference count if exist
+        if (fetchedCategory) {
+          fetchedCategory.referencedCount!!++;
+          fetchedCategory.save();
+        }
         // create category if not exist
         !fetchedCategory && (fetchedCategory = await createCategory(category));
         return fetchedCategory._id;

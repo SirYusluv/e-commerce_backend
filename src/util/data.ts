@@ -1,3 +1,5 @@
+import path from "path";
+
 export const SPLIT_PATTERN = ":::";
 export const BCRYPT_SALT = 12;
 export const EMAIL_ADDR_PATTERN =
@@ -7,6 +9,11 @@ export const NAME_MIN_LENGTH = 1;
 export const NAME_MAX_LENGTH = 15;
 export const ADDRESS_MIN_LENGTH = 2;
 export const ITEM_IMAGES_COUNT = 3;
+
+export const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png"];
+export const FILE_SIZE_LIMIT = 200 * 1024; // 200kb
+
+export const PUBLIC_DIR = path.join(__dirname, "..", "..", "public");
 
 export const HTTP_STATUS = {
   ok: 200,

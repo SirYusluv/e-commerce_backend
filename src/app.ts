@@ -8,9 +8,12 @@ import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import { AuthRouter } from "./auth/auth.router";
 import {
+  ALLOWED_FILE_TYPES,
+  FILE_SIZE_LIMIT,
   HTTP_STATUS,
   IResponse,
   ITEM_IMAGES_COUNT,
+  PUBLIC_DIR,
   SPLIT_PATTERN,
 } from "./util/data";
 import { createLogManager } from "simple-node-logger";
@@ -24,7 +27,6 @@ import { v4 as uuid } from "uuid";
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const app = express();
-
 app.use((req, res, next) => {
   const allowedOrigin = ["http://127.0.0.1:5500", "http://127.0.0.1:5555"];
   const origin = req.headers.origin!!;
@@ -48,7 +50,7 @@ const logger = createLogManager().createLogger("APP.ts");
 
 const storage = multer.diskStorage({
   destination: function (_, _1, cb) {
-    cb(null, path.join(__dirname, "../", "public", "/"));
+    cb(null, PUBLIC_DIR);
   },
   filename: function (_, file, cb) {
     const ext = path.extname(file.originalname);
@@ -56,11 +58,29 @@ const storage = multer.diskStorage({
   },
 });
 
-// TODO: try uploading more than 3 images
+const imageFilter = function (
+  req: Request,
+  file: Express.Multer.File,
+  cb: any
+) {
+  if (ALLOWED_FILE_TYPES.includes(file.mimetype)) cb(null, true);
+  else
+    cb(
+      new Error(
+        `Invalid file type. Only ${ALLOWED_FILE_TYPES.join(
+          ", "
+        )} files are allowes.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
+      )
+    );
+};
+
 export const upload = multer({
   storage,
+  fileFilter: imageFilter,
+  limits: { fileSize: FILE_SIZE_LIMIT },
 });
 
+app.use(express.static(PUBLIC_DIR));
 app.use("/auth", AuthRouter);
 app.use("/user", isAuthenticatedGuard, UserRouter);
 app.use(
