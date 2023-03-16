@@ -7,10 +7,19 @@ import express, {
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import { AuthRouter } from "./auth/auth.router";
-import { HTTP_STATUS, IResponse, SPLIT_PATTERN } from "./util/data";
+import {
+  HTTP_STATUS,
+  IResponse,
+  ITEM_IMAGES_COUNT,
+  SPLIT_PATTERN,
+} from "./util/data";
 import { createLogManager } from "simple-node-logger";
 import { UserRouter } from "./user/user.router";
 import { isAuthenticatedGuard } from "./guards/is-authenticated.guard";
+import { ItemRouter } from "./item/item.router";
+import multer from "multer";
+import path from "path";
+import { v4 as uuid } from "uuid";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -19,8 +28,24 @@ app.use(express.json());
 
 const logger = createLogManager().createLogger("APP.ts");
 
+const storage = multer.diskStorage({
+  destination: function (_, _1, cb) {
+    cb(null, path.join(__dirname, "../", "public", "/"));
+  },
+  filename: function (_, file, cb) {
+    const ext = path.extname(file.originalname);
+    cb(null, `${file.fieldname}-${uuid()}${ext}`);
+  },
+});
+
+// TODO: try uploading more than 3 images
+export const upload = multer({
+  storage,
+}).array("files", ITEM_IMAGES_COUNT);
+
 app.use("/auth", AuthRouter);
 app.use("/user", isAuthenticatedGuard, UserRouter);
+app.use("/item", isAuthenticatedGuard, ItemRouter);
 
 const errorHandler: ErrorRequestHandler = function (
   err: any,

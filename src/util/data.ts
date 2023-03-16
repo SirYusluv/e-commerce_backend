@@ -6,6 +6,7 @@ export const PASSWORD_MIN_LENHT = 7;
 export const NAME_MIN_LENGTH = 1;
 export const NAME_MAX_LENGTH = 15;
 export const ADDRESS_MIN_LENGTH = 2;
+export const ITEM_IMAGES_COUNT = 3;
 
 export const HTTP_STATUS = {
   ok: 200,

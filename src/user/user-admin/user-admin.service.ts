@@ -3,6 +3,7 @@ import { ACCOUNT_TYPES, HTTP_STATUS, IResponse } from "../../util/data";
 import { getSupportedAccounts } from "../../util/helper";
 import { FindUsersDto } from "../dtos/find-users.dto";
 import { UserAdminCreateUserDto } from "../dtos/user-admin-create-user.dto";
+import { User } from "../user.schema";
 import { createUser, findUsers } from "../user.service";
 
 export async function userAdminCreateUser(
@@ -90,8 +91,14 @@ export async function getUsers(
       isBlocked,
       accountType
     );
-    const users = await findUsers(findUsersDto, limit, skip);
-    const response: IResponse = { message: "", status: HTTP_STATUS.ok, users };
+    const { users, count } = await findUsers(findUsersDto, limit, skip);
+
+    const response: IResponse = {
+      message: "",
+      status: HTTP_STATUS.ok,
+      users,
+      count,
+    };
     res.status(response.status).json(response);
   } catch (err: any) {
     next(err);

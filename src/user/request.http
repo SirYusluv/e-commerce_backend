@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### receive query param: firstName, lastName, address, contact, isBlocked, accountType, limit, skip
-### returns { message: "", status: number, users: {} } 
+### returns { message: "", status: number, users: {}, count: number } 
 ### get users
 GET http://localhost:3000/user/user-admin/users?limit=1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDExYjM2YjNlMTgwOGQ2NDZmOTgxMjAiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3ODg4MTY5MH0.3hzqNbb63Ewfmi5kUZkQhq1DzlhWKYovj01a-9O5_RU

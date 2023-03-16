@@ -180,7 +180,13 @@ export async function findUsers(
     getSupportedAccounts().includes(findUsersDto.accountType as any) &&
       userQuery.where("accountType", findUsersDto.accountType);
 
-    return userQuery.limit(limit).skip(skip).exec();
+    // Was getting query was already executed error, so had to duplicate to execute count query
+    const countQuery = userQuery.clone();
+
+    return {
+      users: await userQuery.limit(limit).skip(skip).exec(),
+      count: await countQuery.countDocuments(),
+    };
   } catch (err: any) {
     logger.error(err);
     throw err;
