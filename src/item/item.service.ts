@@ -36,10 +36,10 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
 
     const price = Number(priceStr);
     const remainingCount = Number(remainingCountStr);
-    const { _id: addedBy } = req.body.user as UserType;
+    const addedBy = (req.body.user as UserType)._id;
     // convert categories: string[] to ObjectId[]
     const categories = await Promise.all(
-      (categoriesStrArr as string[]).map(async function (category) {
+      (categoriesStrArr.split(",") as string[]).map(async function (category) {
         let fetchedCategory: CategoryType | null;
         fetchedCategory = await findCategory({ category });
         // create category if not exist

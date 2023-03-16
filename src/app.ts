@@ -26,7 +26,7 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 const app = express();
 
 app.use((req, res, next) => {
-  const allowedOrigin = ["http://127.0.0.1:5500"];
+  const allowedOrigin = ["http://127.0.0.1:5500", "http://127.0.0.1:5555"];
   const origin = req.headers.origin!!;
 
   res.setHeader(
@@ -59,11 +59,17 @@ const storage = multer.diskStorage({
 // TODO: try uploading more than 3 images
 export const upload = multer({
   storage,
-}).array("files", ITEM_IMAGES_COUNT);
+});
 
 app.use("/auth", AuthRouter);
 app.use("/user", isAuthenticatedGuard, UserRouter);
-app.use("/item", isAuthenticatedGuard, ItemRouter);
+app.use(
+  "/item",
+  isAuthenticatedGuard,
+  upload.array("files", ITEM_IMAGES_COUNT),
+  isAuthenticatedGuard, // multer reset body and remove user
+  ItemRouter
+);
 
 const errorHandler: ErrorRequestHandler = function (
   err: any,
@@ -72,6 +78,7 @@ const errorHandler: ErrorRequestHandler = function (
   _1: NextFunction
 ) {
   try {
+    logger.error(err);
     const errMsgAndStatus = (err.message as string).split(SPLIT_PATTERN);
     const message = errMsgAndStatus[0];
     const status = Number(errMsgAndStatus[1]);
@@ -80,20 +87,18 @@ const errorHandler: ErrorRequestHandler = function (
       status: status || HTTP_STATUS.internalServerError,
     };
     res.status(status).json(resMsg);
-
-    logger.error(err);
   } catch (e: any) {
+    logger.error(e);
     res.status(HTTP_STATUS.internalServerError).json({
       message: "Error processing your request, please try later.",
       status: HTTP_STATUS.internalServerError,
     });
-    logger.error(e);
   }
 };
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3100;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, async function () {
   logger.info("Listening on PORT: ", PORT);
   try {
