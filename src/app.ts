@@ -24,6 +24,24 @@ import { v4 as uuid } from "uuid";
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const app = express();
+
+app.use((req, res, next) => {
+  const allowedOrigin = ["http://127.0.0.1:5500"];
+  const origin = req.headers.origin!!;
+
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    allowedOrigin.includes(origin) ? origin : allowedOrigin[0]
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") {
+    res.status(200).send();
+    return;
+  }
+  next();
+});
+
 app.use(express.json());
 
 const logger = createLogManager().createLogger("APP.ts");
@@ -75,7 +93,7 @@ const errorHandler: ErrorRequestHandler = function (
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3100;
 app.listen(PORT, async function () {
   logger.info("Listening on PORT: ", PORT);
   try {
