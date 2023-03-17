@@ -10,7 +10,7 @@ import {
 } from "../util/data";
 import { Category, CategoryType } from "./category.schema";
 import { SaveItemDto } from "./dtos/save-item.dto";
-import { Item } from "./item.schema.";
+import { Item, ItemType } from "./item.schema.";
 
 export async function addItem(req: Request, res: Response, next: NextFunction) {
   try {
@@ -210,4 +210,138 @@ export async function createCategory(category: string) {
       `Invalid category provided.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
     );
   return new Category({ category }).save();
+}
+
+// this should be probably be refractored but deadline soon
+export async function getItem(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { itemId, itemName: itemNameQr, category: categoriesQr } = req.body;
+    const { limit, page, topSelling, limitedInStock } = req.query;
+    const skip = Number(page) || 0;
+    const lim = Number(limit) || 10;
+    const isTopSelliing =
+      topSelling?.toString() === "true"
+        ? true
+        : topSelling?.toString() === "false"
+        ? false
+        : null;
+    const isLimitedInStock =
+      limitedInStock?.toString() === "true"
+        ? true
+        : limitedInStock?.toString() === "false"
+        ? false
+        : null;
+
+    let items: ItemType[] | null;
+
+    // if search is by topselling or limitedInStock
+    if (isTopSelliing || isLimitedInStock) {
+      const response = await getTopsellingOrLimitedInStockItems(
+        skip,
+        lim,
+        isTopSelliing || undefined,
+        isLimitedInStock || undefined
+      );
+      return res.status(response.status).json(response);
+    }
+
+    // if search is by id
+    if (itemId) {
+      const _id = new Types.ObjectId(itemId);
+      const item = await Item.findById(_id).exec();
+      items = item && [item];
+
+      const response: IResponse = {
+        message: "",
+        status: HTTP_STATUS.ok,
+        items,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    // if item name exist
+    const itemName = itemNameQr?.toString();
+    if (itemName) {
+      const itemsQr = Item.find();
+      //.limit(lim).skip(skip);
+      itemsQr.where("itemName", itemName);
+      const count = await itemsQr.clone().countDocuments();
+      itemsQr.limit(lim);
+      itemsQr.skip(skip);
+      items = await itemsQr.exec();
+
+      const response: IResponse = {
+        message: "",
+        status: HTTP_STATUS.ok,
+        items,
+        count,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    // search by category if provided
+    const categories = categoriesQr?.toString(); // actually, just sigle category.
+    if (categories) {
+      // category here is a string, first get it's id
+      const categoryModel = await Category.findOne({ category: categories });
+      if (!categoryModel) {
+        const response: IResponse = {
+          message: "Invalid category provided.",
+          status: HTTP_STATUS.badRequest,
+        };
+        return res.status(response.status).json(response);
+      }
+
+      const itemQuery = Item.find();
+      itemQuery.where("categories", categoryModel._id);
+      const count = await itemQuery.clone().countDocuments();
+      items = await itemQuery.limit(lim).skip(skip).exec();
+
+      const response: IResponse = {
+        message: "",
+        status: HTTP_STATUS.ok,
+        items,
+        count,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    // if items is still null (no query or param) return list of items
+    const itemsQuery = Item.find();
+    const count = await itemsQuery.clone().countDocuments();
+    items = await itemsQuery.limit(lim).skip(skip).exec();
+
+    const response: IResponse = {
+      message: "",
+      status: HTTP_STATUS.ok,
+      items,
+      count,
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
+
+// if search is by topselling or limitedInStock
+export async function getTopsellingOrLimitedInStockItems(
+  skip: number,
+  lim: number,
+  isTopSelling?: boolean,
+  isLimitedInStock?: boolean
+) {
+  const itemQuery = Item.find();
+  const count = await itemQuery.clone().countDocuments();
+  isTopSelling && itemQuery.sort({ boughtByCount: "desc" });
+  isLimitedInStock && itemQuery.sort({ limitedInStock: "asc" });
+  skip && itemQuery.skip(skip);
+  const items = await itemQuery.limit(lim).exec();
+
+  const response: IResponse = {
+    message: "",
+    status: HTTP_STATUS.ok,
+    items,
+    count,
+  };
+  return response;
 }

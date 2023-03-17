@@ -18,6 +18,7 @@ import * as jwt from "jsonwebtoken";
 import { createLogManager } from "simple-node-logger";
 import { ChangePasswordDto } from "./dtos/change-password.dto";
 import { emailIsValid } from "../util/helper";
+import { getTopsellingOrLimitedInStockItems } from "../item/item.service";
 
 const logger = createLogManager().createLogger("AuthService.ts");
 
@@ -153,6 +154,33 @@ export async function resetPassword(
       };
       return res.status(response.status).json(response);
     }
+    next(err);
+  }
+}
+
+export async function getTopBoughtOrLimited(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { topBought, limited, limit, page } = req.query;
+    const response = await getTopsellingOrLimitedInStockItems(
+      page ? Number(page.toString()) : 0,
+      limit ? Number(limit.toString()) : 10,
+      topBought?.toString() === "true"
+        ? true
+        : topBought?.toString() === "false"
+        ? false
+        : undefined,
+      limited?.toString() === "true"
+        ? true
+        : limited?.toString() === "false"
+        ? false
+        : undefined
+    );
+    res.status(response.status).json(response);
+  } catch (err: any) {
     next(err);
   }
 }

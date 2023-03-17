@@ -29,3 +29,7 @@ Content-Type: application/json
 {
     "password": "0123456789"
 }
+### as query param: topBought?, limited?, limit?, page?
+### returns { message: "" | string, status: number, data?: Item[], count?: number }
+### get items
+GET http://localhost:3000/auth/item?

@@ -4,6 +4,7 @@ import {
   signin,
   sendPasswordResetMail,
   resetPassword,
+  getTopBoughtOrLimited,
 } from "./auth.service";
 
 export const AuthRouter = Router();
@@ -15,3 +16,5 @@ AuthRouter.post("/signin", signin);
 AuthRouter.get("/send-password-reset-mail/:email", sendPasswordResetMail);
 
 AuthRouter.post("/reset-password/:id", resetPassword);
+
+AuthRouter.get("/item", getTopBoughtOrLimited);
