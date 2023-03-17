@@ -14,16 +14,11 @@ export function extractTokenFromBearer(bearerToken: string) {
   return bearerToken.split(" ")[1];
 }
 
-export function getSupportedAccounts() {
-  return Object.entries(ACCOUNTS).map((account, _, _1) => account[1]);
-}
+export const getSupportedAccounts = () =>
+  Object.entries(ACCOUNTS).map((account, _, _1) => account[1]);
 
-export function emailIsValid(emailAddress: string) {
-  return EMAIL_ADDR_PATTERN.test(emailAddress);
-}
+export const emailIsValid = (emailAddress: string) =>
+  EMAIL_ADDR_PATTERN.test(emailAddress);
 
-export function contactIsValid(contact: string) {
-  return (
-    contact.length === 11 && contact.startsWith("0") && /^[0-9]+$/.test(contact)
-  );
-}
+export const contactIsValid = (contact: string) =>
+  contact.length === 11 && contact.startsWith("0") && /^[0-9]+$/.test(contact);

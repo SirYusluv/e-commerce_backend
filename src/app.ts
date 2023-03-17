@@ -22,11 +22,21 @@ import { isAuthenticatedGuard } from "./guards/is-authenticated.guard";
 import { ItemRouter } from "./item/item.router";
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 import { v4 as uuid } from "uuid";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-
 const app = express();
+const logger = createLogManager().createLogger("APP.ts");
+
+// create the /public dir if not exist
+if (!fs.existsSync(PUBLIC_DIR)) fs.mkdirSync(PUBLIC_DIR);
+// confirm public dir has been created or exit the app
+if (!fs.existsSync(PUBLIC_DIR)) {
+  logger.error(new Error(`Public dir at ${PUBLIC_DIR} does not exist.`));
+  process.exit(-1);
+}
+
 app.use((req, res, next) => {
   const allowedOrigin = ["http://127.0.0.1:5500", "http://127.0.0.1:5555"];
   const origin = req.headers.origin!!;
@@ -37,16 +47,11 @@ app.use((req, res, next) => {
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") {
-    res.status(200).send();
-    return;
-  }
+  if (req.method === "OPTIONS") return res.status(200).send();
   next();
 });
 
 app.use(express.json());
-
-const logger = createLogManager().createLogger("APP.ts");
 
 const storage = multer.diskStorage({
   destination: function (_, _1, cb) {
