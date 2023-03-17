@@ -1,4 +1,7 @@
-import { model, Schema, Types } from "mongoose";
+import { Document, model, Schema, Types } from "mongoose";
+
+export type ItemType = Document<unknown, any, IItem> &
+  Omit<IItem & { _id: Types.ObjectId }, never>;
 
 export interface IItem {
   itemName: string;

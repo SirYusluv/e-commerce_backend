@@ -32,3 +32,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDExYjM2Y
 ### get user data
 GET http://localhost:3000/user/user
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDExYjM2YjNlMTgwOGQ2NDZmOTgxMjAiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3ODg4MTY5MH0.3hzqNbb63Ewfmi5kUZkQhq1DzlhWKYovj01a-9O5_RU
+
+### User admin or owner route
+### Delete user
+DELETE http://localhost:3000/user/user/641471e2800357c214330c48
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE0NzFlMjgwMDM1N2MyMTQzMzBjNDgiLCJlbWFpbEFkZHJlc3MiOiJsYXRAZ21hbC5jb20iLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJpYXQiOjE2NzkwNjE0ODh9.rZ2q7y3_t9w7cXj8uuZ4mWa32jnzDKlkmypY57Aeb9A

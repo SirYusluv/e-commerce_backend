@@ -17,6 +17,7 @@ import { FindUsersDto } from "./dtos/find-users.dto";
 import { NextFunction, Request, Response } from "express";
 import { ModifyUserDto } from "./dtos/modify-user.dto";
 import { getSupportedAccounts } from "../util/helper";
+import { Types } from "mongoose";
 
 const logger = createLogManager().createLogger("UserService.ts");
 
@@ -94,6 +95,33 @@ export async function modifyUser(
       message: "User data modified successfully.",
       status: HTTP_STATUS.created,
       user: userToSendAsResponse,
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
+
+export function deleteUser(req: Request, res: Response, next: NextFunction) {
+  try {
+    let _id: string | Types.ObjectId = req.params.userId;
+    const user = req.body.user as UserType;
+
+    _id = new Types.ObjectId(_id);
+
+    if (!user._id.equals(_id) || user.accountType !== ACCOUNTS.userAdmin) {
+      const response: IResponse = {
+        message: "You are not authorized to delete this user.",
+        status: HTTP_STATUS.forbidden,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    User.findByIdAndDelete(_id).exec();
+
+    const response: IResponse = {
+      message: "User deleted successfully",
+      status: HTTP_STATUS.ok,
     };
     res.status(response.status).json(response);
   } catch (err: any) {

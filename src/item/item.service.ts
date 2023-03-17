@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import { UserType } from "../user/user.schema";
 import {
+  ACCOUNTS,
   HTTP_STATUS,
   IResponse,
   ITEM_IMAGES_COUNT,
@@ -73,7 +74,6 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
     next(err);
   }
 }
-// TODO: delete item and user route
 
 export async function updateItem(
   req: Request,
@@ -158,6 +158,25 @@ export async function updateItem(
       message: "Item  modified succesfully.",
       status: HTTP_STATUS.ok,
       item,
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
+
+export async function deleteItem(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    let _id: Types.ObjectId | string = req.params.itemId;
+    _id = new Types.ObjectId(_id);
+    Item.findOneAndDelete({ _id }).exec();
+    const response: IResponse = {
+      message: "Item deleted successfully.",
+      status: HTTP_STATUS.ok,
     };
     res.status(response.status).json(response);
   } catch (err: any) {

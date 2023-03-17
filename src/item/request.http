@@ -22,3 +22,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDExYjM2Y
 ### modify item
 PATCH http://localhost:3000/item/item?_id=6413203ec12cb79c085bae3c&itemName=bbTest&categories=f,z
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE0NWZkNWZlMzExOTg2NjEwZDY2NDIiLCJlbWFpbEFkZHJlc3MiOiJtbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiU0FMRVMiLCJpYXQiOjE2NzkwNTY5MzR9.koR_2YBxL1z0nzF0DtSQg8SudYi7COIMsUbiYaJy96s
+
+### sales user only route
+### takes param itemId
+### delete item
+DELETE http://localhost:3000/item/item/64137d894fb05a9c714f007d
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE0NWZkNWZlMzExOTg2NjEwZDY2NDIiLCJlbWFpbEFkZHJlc3MiOiJtbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiU0FMRVMiLCJpYXQiOjE2NzkwNTY5MzR9.koR_2YBxL1z0nzF0DtSQg8SudYi7COIMsUbiYaJy96s
