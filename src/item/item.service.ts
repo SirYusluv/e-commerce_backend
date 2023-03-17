@@ -66,7 +66,7 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
 
     const item = await new Item(saveItemDto).save();
     const response: IResponse = {
-      message: "Item saved successfully",
+      message: "Item saved successfully.",
       status: HTTP_STATUS.created,
       item,
     };
