@@ -1,0 +1,16 @@
+### itemDescription2? is optional
+### { message: string, status: number, item: item }
+### Upload item
+POST http://localhost:3000/item/item
+Content-Type: multipart/form-data
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDExYjM2YjNlMTgwOGQ2NDZmOTgxMjAiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3ODg4MTY5MH0.3hzqNbb63Ewfmi5kUZkQhq1DzlhWKYovj01a-9O5_RU
+
+{
+  "files": ["file1.files[0]", "file1.files[1]", "file1.files[2]"],
+  "itemName": "my udnu",
+  "price": 234,
+  "itemDescription1": "e ojhh ah aa",
+  "itemDescription2": "iuhf idhgi sahaoi d",
+  "remainingCount": 23,
+  "categories": ["a", "d"]
+}
