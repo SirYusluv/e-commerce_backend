@@ -1,14 +1,14 @@
 #User admin - create user
 POST http://localhost:3000/user/user-admin/create-user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDExYjM2YjNlMTgwOGQ2NDZmOTgxMjAiLCJlbWFpbEFkZHJlc3MiOiJ2bXVlbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiVVNFUiIsImlhdCI6MTY3ODg4MTY5MH0.3hzqNbb63Ewfmi5kUZkQhq1DzlhWKYovj01a-9O5_RU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE0NWY2OWZlMzExOTg2NjEwZDY2M2UiLCJlbWFpbEFkZHJlc3MiOiJsQGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSX0FETUlOIiwiaWF0IjoxNjc5MDU2ODE4fQ.1RxV-JZZTzjhRUySy8QduU0te7v93cUZ7JesUg8g8c8
 Content-Type: application/json
 
 {
     "firstName": "Yusuf",
     "lastName": "Damola",
-    "emailAddress": "an@emi.com",
-    "password": "simplepass",
-    "accountType": "USER"
+    "emailAddress": "ml@gmal.com",
+    "password": "123456789",
+    "accountType": "SALES"
 }
 
 ### route to change user properties. Passed as query param, password passed in body.

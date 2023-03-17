@@ -42,13 +42,11 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
       (categoriesStrArr.split(",") as string[]).map(async function (category) {
         let fetchedCategory: CategoryType | null;
         fetchedCategory = await findCategory({ category });
-        //increment category reference count if exist
-        if (fetchedCategory) {
-          fetchedCategory.referencedCount!!++;
-          fetchedCategory.save();
-        }
         // create category if not exist
         !fetchedCategory && (fetchedCategory = await createCategory(category));
+
+        fetchedCategory.referencedCount!!++;
+        fetchedCategory.save();
         return fetchedCategory._id;
       })
     );
@@ -68,6 +66,97 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
     const response: IResponse = {
       message: "Item saved successfully.",
       status: HTTP_STATUS.created,
+      item,
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
+// TODO: delete item and user route
+
+export async function updateItem(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const {
+      _id: idStr,
+      itemName,
+      price: priceStr,
+      itemDescription1,
+      itemDescription2,
+      remainingCount: remainingCountStr,
+      categories: categoriesStrArr,
+    } = req.query; // I don't need dto here
+
+    if (!idStr) {
+      const response: IResponse = {
+        message: "You must provide item Id.",
+        status: HTTP_STATUS.badRequest,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    const _id = new Types.ObjectId(idStr.toString());
+    const price = Number(priceStr);
+    const remainingCount = Number(remainingCountStr);
+    const categories =
+      categoriesStrArr?.toString() &&
+      (await Promise.all(
+        (categoriesStrArr.toString().split(",") as string[]).map(
+          async function (category) {
+            let fetchedCategory: CategoryType | null;
+            fetchedCategory = await findCategory({ category });
+            // create category if not exist
+            !fetchedCategory &&
+              (fetchedCategory = await createCategory(category));
+
+            //increment category reference count if exist
+            if (fetchedCategory) {
+              fetchedCategory.referencedCount!!++;
+              fetchedCategory.save();
+            }
+            return fetchedCategory._id;
+          }
+        )
+      ));
+
+    const item = await Item.findById(_id);
+    if (!item) {
+      const response: IResponse = {
+        message: "Item not found.",
+        status: HTTP_STATUS.ok,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    // -- prev category ref num
+    if (item.categories) {
+      item.categories.map(async (category) => {
+        const categoryModel = await findCategory({ _id: category });
+        if (categoryModel?.referencedCount) {
+          categoryModel.referencedCount--;
+          categoryModel.save();
+        }
+      });
+    }
+
+    // modify item
+    item.itemName = itemName?.toString() || item.itemName;
+    item.price = price || item.price;
+    item.itemDescription1 =
+      itemDescription1?.toString() || item.itemDescription1;
+    item.itemDescription2 =
+      itemDescription2?.toString() || item.itemDescription2;
+    item.remainingCount = remainingCount || item.remainingCount;
+    item.categories = categories || item.categories;
+    await item.save();
+
+    const response: IResponse = {
+      message: "Item  modified succesfully.",
+      status: HTTP_STATUS.ok,
       item,
     };
     res.status(response.status).json(response);

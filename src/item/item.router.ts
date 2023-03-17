@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { upload } from "../app";
-import { addItem } from "./item.service";
+import { isSalesUserGuard } from "../guards/is-sales-user.guard";
+import { addItem, updateItem } from "./item.service";
 
 export const ItemRouter = Router();
 
-ItemRouter.post("/item", addItem);
+ItemRouter.post("/item", isSalesUserGuard, addItem);
+
+ItemRouter.patch("/item", isSalesUserGuard, updateItem);
