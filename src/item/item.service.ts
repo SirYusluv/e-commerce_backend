@@ -323,6 +323,31 @@ export async function getItem(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+export async function getCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const {
+    page: pageQr,
+    limit: limitQr,
+    sortByReference: sortByReferenceQr,
+  } = req.query;
+  const page =
+    pageQr?.toString() === "true"
+      ? true
+      : pageQr?.toString() === "false"
+      ? false
+      : 0;
+  const limit = Number(limitQr) || 10;
+  const sortByReference =
+    sortByReferenceQr?.toString() === "true"
+      ? true
+      : sortByReferenceQr?.toString() === "false"
+      ? false
+      : null;
+}
+
 // if search is by topselling or limitedInStock
 export async function getTopsellingOrLimitedInStockItems(
   skip: number,
