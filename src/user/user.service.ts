@@ -19,6 +19,7 @@ import { ModifyUserDto } from "./dtos/modify-user.dto";
 import { getSupportedAccounts } from "../util/helper";
 import { Types } from "mongoose";
 import { Cart } from "../cart/cart.schema";
+import { Save } from "../save/save.schema";
 
 const logger = createLogManager().createLogger("UserService.ts");
 
@@ -122,6 +123,8 @@ export function deleteUser(req: Request, res: Response, next: NextFunction) {
     User.findByIdAndDelete(_id).exec();
     // delete user's cart
     Cart.findOneAndDelete({ owner: _id }).exec();
+    // delete user's save
+    Save.findOneAndDelete({ owner: _id }).exec();
 
     const response: IResponse = {
       message: "User deleted successfully",
@@ -158,6 +161,8 @@ export const createUser = async function (
     const createdUser = await user.save();
     // create user cart
     new Cart({ owner: createdUser._id }).save();
+    // create user save
+    new Save({ owner: createdUser._id }).save();
 
     return createdUser;
   } catch (err: any) {

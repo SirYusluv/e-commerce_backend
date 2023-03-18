@@ -25,6 +25,7 @@ import path from "path";
 import fs from "fs";
 import { v4 as uuid } from "uuid";
 import { CartRouter } from "./cart/cart.router";
+import { SaveRouter } from "./save/save.router";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 const app = express();
@@ -100,6 +101,7 @@ app.use(
   ItemRouter
 );
 app.use("/cart", isAuthenticatedGuard, CartRouter);
+app.use("/save", isAuthenticatedGuard, SaveRouter);
 
 const errorHandler: ErrorRequestHandler = function (
   err: any,

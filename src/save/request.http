@@ -1,7 +1,7 @@
 ### returns message, status
-### takes itemId and quantity in body
-### add item to cart
-POST http://localhost:3000/cart/cart
+### takes itemId in body
+### add item to save
+POST http://localhost:3000/save/save
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1MGQ0NzRmMGYzMGQ3MWUxNzUiLCJlbWFpbEFkZHJlc3MiOiJwbGF0QGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSIiwiaWF0IjoxNjc5MTQ0OTM3fQ.N2Pk60lTyTpu-3gAG0iKTV2pYu3dVMVJhA_hdioKulg
 
@@ -11,13 +11,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1M
 }
 
 ### returns message, status
-### pass itemId as param, all?: boolean as search query
-### remove item from cart
-DELETE http://localhost:3000/cart/cart/6413208ec12cb79c085bae42?all=true
-Content-Type: application/json
+### pass itemId as param
+### remove item from save
+DELETE http://localhost:3000/save/save/6413208ec12cb79c085bae42
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1MGQ0NzRmMGYzMGQ3MWUxNzUiLCJlbWFpbEFkZHJlc3MiOiJwbGF0QGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSIiwiaWF0IjoxNjc5MTQ0OTM3fQ.N2Pk60lTyTpu-3gAG0iKTV2pYu3dVMVJhA_hdioKulg
 
-### return { messsage: "", status: number, cart: Cart }
-### get cart
-GET http://localhost:3000/cart/cart
+### return { messsage: "", status: number, save: Cart }
+### get save
+GET http://localhost:3000/save/save
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1MGQ0NzRmMGYzMGQ3MWUxNzUiLCJlbWFpbEFkZHJlc3MiOiJwbGF0QGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSIiwiaWF0IjoxNjc5MTQ0OTM3fQ.N2Pk60lTyTpu-3gAG0iKTV2pYu3dVMVJhA_hdioKulg

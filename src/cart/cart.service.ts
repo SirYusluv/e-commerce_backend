@@ -120,3 +120,17 @@ export async function removeItemFromCart(
     next(err);
   }
 }
+
+export async function getCart(req: Request, res: Response, next: NextFunction) {
+  try {
+    const user = req.body.user as UserType;
+    const response: IResponse = {
+      message: "",
+      status: HTTP_STATUS.ok,
+      cart: await Cart.findOne({ owner: user._id }),
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
