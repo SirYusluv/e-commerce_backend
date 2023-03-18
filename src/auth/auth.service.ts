@@ -18,7 +18,7 @@ import * as jwt from "jsonwebtoken";
 import { createLogManager } from "simple-node-logger";
 import { ChangePasswordDto } from "./dtos/change-password.dto";
 import { emailIsValid } from "../util/helper";
-import { getTopsellingOrLimitedInStockItems } from "../item/item.service";
+import { getCategoryList, getTopsellingOrLimitedInStockItems } from "../item/item.service";
 
 const logger = createLogManager().createLogger("AuthService.ts");
 
@@ -179,6 +179,43 @@ export async function getTopBoughtOrLimited(
         ? false
         : undefined
     );
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
+
+export async function getCategories(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const {
+      page: pageQr,
+      limit: limitQr,
+      sortByReference: sortByReferenceQr,
+    } = req.query;
+    const page = Number(pageQr?.toString()) || 0;
+    const limit = Number(limitQr) || 10;
+    const sortByReference =
+      sortByReferenceQr?.toString() === "true"
+        ? true
+        : sortByReferenceQr?.toString() === "false"
+        ? false
+        : null;
+
+    const categories = await getCategoryList(
+      page,
+      limit,
+      sortByReference || undefined
+    );
+
+    const response: IResponse = {
+      message: "",
+      status: HTTP_STATUS.ok,
+      categories,
+    };
     res.status(response.status).json(response);
   } catch (err: any) {
     next(err);

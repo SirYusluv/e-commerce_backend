@@ -328,24 +328,47 @@ export async function getCategories(
   res: Response,
   next: NextFunction
 ) {
-  const {
-    page: pageQr,
-    limit: limitQr,
-    sortByReference: sortByReferenceQr,
-  } = req.query;
-  const page =
-    pageQr?.toString() === "true"
-      ? true
-      : pageQr?.toString() === "false"
-      ? false
-      : 0;
-  const limit = Number(limitQr) || 10;
-  const sortByReference =
-    sortByReferenceQr?.toString() === "true"
-      ? true
-      : sortByReferenceQr?.toString() === "false"
-      ? false
-      : null;
+  try {
+    const {
+      page: pageQr,
+      limit: limitQr,
+      sortByReference: sortByReferenceQr,
+    } = req.query;
+    const page = Number(pageQr?.toString()) || 0;
+    const limit = Number(limitQr) || 10;
+    const sortByReference =
+      sortByReferenceQr?.toString() === "true"
+        ? true
+        : sortByReferenceQr?.toString() === "false"
+        ? false
+        : null;
+
+    const categories = await getCategoryList(
+      page,
+      limit,
+      sortByReference || undefined
+    );
+
+    const response: IResponse = {
+      message: "",
+      status: HTTP_STATUS.ok,
+      categories,
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}
+
+export function getCategoryList(
+  page: number,
+  limit: number,
+  sortByReference?: boolean
+) {
+  const categoryQuery = Category.find();
+  sortByReference && categoryQuery.sort({ referencedCount: "desc" });
+  const categories = categoryQuery.skip(page).limit(limit).exec();
+  return categories;
 }
 
 // if search is by topselling or limitedInStock

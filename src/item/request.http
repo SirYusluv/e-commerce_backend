@@ -40,3 +40,9 @@ Content-Type: application/json
 {
   "category": "a"
 }
+
+### returns { message: "", categories: Category[], status?: number }
+### query param: sortByReference?: true, limit?: number, count?: number
+### Get categories
+GET http://localhost:3000/item/categories?sortByReference=true&limit=2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1NjliMzBiOGQwZmZhMDQ1Njc4MTYiLCJlbWFpbEFkZHJlc3MiOiJsYXRAZ21hbC5jb20iLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJpYXQiOjE2NzkxMjQ5MjB9.0qjNBBP17YvuSw_MB7e4r3ZI-B3TrP3rZwqCfhFEOC8
