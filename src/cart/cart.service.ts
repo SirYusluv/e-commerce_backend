@@ -74,3 +74,49 @@ export async function addItemToCart(
     next(err);
   }
 }
+
+export async function removeItemFromCart(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const itemId = req.params.itemId;
+    const all = req.query.all?.toString() === "true" ? true : false;
+    const user = req.body.user as UserType;
+    const _id = new Types.ObjectId(itemId);
+
+    const userCart = await Cart.findOne({ owner: user._id });
+
+    if (!userCart) {
+      const response: IResponse = {
+        message: "User's cart not found.",
+        status: HTTP_STATUS.ok,
+      };
+      return res.status(response.status).json(response);
+    }
+
+    if (all) {
+      userCart.items!!.forEach((item, i, cart) => {
+        if (item.itemId.equals(itemId)) {
+          cart.splice(i, 1);
+        }
+      });
+    } else {
+      userCart.items!!.forEach((item, i, cart) => {
+        if (item.itemId.equals(itemId)) {
+          cart[i].quantity!!--;
+        }
+      });
+    }
+
+    await userCart.save();
+    const response: IResponse = {
+      message: "Item removes successfully.",
+      status: HTTP_STATUS.ok,
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}

@@ -1,3 +1,5 @@
+### returns message, status
+### takes itemId and quantity in body
 ### add item to cart
 POST http://localhost:3000/cart/cart
 Content-Type: application/json
@@ -7,3 +9,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1M
     "itemId": "6413208ec12cb79c085bae42",
     "quantity": 1
 }
+
+### returns message, status
+### pass itemId and param, all?: boolean as search query
+### remove item from cart
+DELETE http://localhost:3000/cart/cart/6413208ec12cb79c085bae42?all=true
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1MGQ0NzRmMGYzMGQ3MWUxNzUiLCJlbWFpbEFkZHJlc3MiOiJwbGF0QGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSIiwiaWF0IjoxNjc5MTQ0OTM3fQ.N2Pk60lTyTpu-3gAG0iKTV2pYu3dVMVJhA_hdioKulg
