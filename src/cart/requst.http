@@ -1,0 +1,9 @@
+### add item to cart
+POST http://localhost:3000/cart/cart
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1MGQ0NzRmMGYzMGQ3MWUxNzUiLCJlbWFpbEFkZHJlc3MiOiJwbGF0QGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSIiwiaWF0IjoxNjc5MTQ0OTM3fQ.N2Pk60lTyTpu-3gAG0iKTV2pYu3dVMVJhA_hdioKulg
+
+{
+    "itemId": "6413208ec12cb79c085bae42",
+    "quantity": 1
+}

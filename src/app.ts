@@ -24,6 +24,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { v4 as uuid } from "uuid";
+import { CartRouter } from "./cart/cart.router";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 const app = express();
@@ -98,6 +99,7 @@ app.use(
   isAuthenticatedGuard, // multer reset body and remove user
   ItemRouter
 );
+app.use("/cart", isAuthenticatedGuard, CartRouter);
 
 const errorHandler: ErrorRequestHandler = function (
   err: any,

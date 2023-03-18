@@ -18,6 +18,7 @@ import { NextFunction, Request, Response } from "express";
 import { ModifyUserDto } from "./dtos/modify-user.dto";
 import { getSupportedAccounts } from "../util/helper";
 import { Types } from "mongoose";
+import { Cart } from "../cart/cart.schema";
 
 const logger = createLogManager().createLogger("UserService.ts");
 
@@ -109,7 +110,7 @@ export function deleteUser(req: Request, res: Response, next: NextFunction) {
 
     _id = new Types.ObjectId(_id);
 
-    if (!user._id.equals(_id) || user.accountType !== ACCOUNTS.userAdmin) {
+    if (!user._id.equals(_id) && user.accountType !== ACCOUNTS.userAdmin) {
       const response: IResponse = {
         message: "You are not authorized to delete this user.",
         status: HTTP_STATUS.forbidden,
@@ -117,7 +118,10 @@ export function deleteUser(req: Request, res: Response, next: NextFunction) {
       return res.status(response.status).json(response);
     }
 
+    // delete user
     User.findByIdAndDelete(_id).exec();
+    // delete user's cart
+    Cart.findOneAndDelete({ owner: _id }).exec();
 
     const response: IResponse = {
       message: "User deleted successfully",
@@ -152,6 +156,9 @@ export const createUser = async function (
       user.createdBy = CREATOR.userAdmin;
     user.password = await bcrypt.hash(user.password, BCRYPT_SALT);
     const createdUser = await user.save();
+    // create user cart
+    new Cart({ owner: createdUser._id }).save();
+
     return createdUser;
   } catch (err: any) {
     logger.error(err);

@@ -15,6 +15,7 @@ interface IUser {
   accountType?: ACCOUNT_TYPES;
   createdBy?: CREATED_BY;
   createdDate?: Date;
+  allowSalesAgentChange: boolean;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -28,6 +29,7 @@ const UserSchema = new Schema<IUser>({
   accountType: { type: String, default: ACCOUNTS.user },
   createdBy: { type: String, default: CREATOR.self },
   createdDate: { type: Date, default: Date.now },
+  allowSalesAgentChange: { type: Boolean, default: false },
 });
 
 export const User = model<IUser>("User", UserSchema);
