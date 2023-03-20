@@ -97,3 +97,21 @@ export async function postOrder(
     next(err);
   }
 }
+
+export async function getReceipts(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const user = req.body.user as UserType;
+    const response: IResponse = {
+      message: "",
+      status: HTTP_STATUS.ok,
+      receipts: await Receipt.find({ owner: user._id }),
+    };
+    res.status(response.status).json(response);
+  } catch (err: any) {
+    next(err);
+  }
+}

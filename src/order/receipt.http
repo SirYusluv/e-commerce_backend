@@ -1,2 +1,9 @@
+### returns { message: string, status: number }
+### order stuff in cart
 POST http://localhost:3000/order/order
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1MGQ0NzRmMGYzMGQ3MWUxNzUiLCJlbWFpbEFkZHJlc3MiOiJwbGF0QGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSIiwiaWF0IjoxNjc5MTQ0OTM3fQ.N2Pk60lTyTpu-3gAG0iKTV2pYu3dVMVJhA_hdioKulg
+
+### returns { message: '', status: number, receipts: Receipt[] }
+### Get receipts
+GET http://localhost:3000/order/receipts
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE1OTU1MGQ0NzRmMGYzMGQ3MWUxNzUiLCJlbWFpbEFkZHJlc3MiOiJwbGF0QGdtYWwuY29tIiwiYWNjb3VudFR5cGUiOiJVU0VSIiwiaWF0IjoxNjc5MTQ0OTM3fQ.N2Pk60lTyTpu-3gAG0iKTV2pYu3dVMVJhA_hdioKulg
