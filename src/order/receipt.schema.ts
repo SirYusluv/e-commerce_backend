@@ -3,14 +3,14 @@ import { Document, model, Schema, Types } from "mongoose";
 export type ReceiptType = Document<unknown, any, IReceipt> &
   Omit<IReceipt & { _id: Types.ObjectId }, never>;
 
-interface IItemInReceipt {
+export interface IItemInReceipt {
   itemId: Types.ObjectId;
   itemName: string;
   priceEach: number;
   quantity: number;
 }
 
-interface IReceipt {
+export interface IReceipt {
   owner: Types.ObjectId;
   datePaid: Date;
   paidBy: Types.ObjectId;

@@ -25,9 +25,10 @@ export async function addItemToCart(
     }
 
     // check if item exist
-    if (!(await Item.findOne({ _id: itemId }))) {
+    const item = await Item.findOne({ _id: itemId });
+    if (!item || quantity > item.remainingCount) {
       const response: IResponse = {
-        message: "Item does not exist.",
+        message: "Item does not exist or quantity too large.",
         status: HTTP_STATUS.ok,
       };
       return res.status(response.status).json(response);
