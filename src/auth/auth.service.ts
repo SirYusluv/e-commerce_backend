@@ -18,7 +18,10 @@ import * as jwt from "jsonwebtoken";
 import { createLogManager } from "simple-node-logger";
 import { ChangePasswordDto } from "./dtos/change-password.dto";
 import { emailIsValid } from "../util/helper";
-import { getCategoryList, getTopsellingOrLimitedInStockItems } from "../item/item.service";
+import {
+  getCategoryList,
+  getTopsellingOrLimitedInStockItems,
+} from "../item/item.service";
 
 const logger = createLogManager().createLogger("AuthService.ts");
 
@@ -41,7 +44,11 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     const { password: _, ...createdUser } = await (
       await createUser(createUserDto)
     ).toObject();
-    res.status(HTTP_STATUS.created).json(createdUser);
+    res.status(HTTP_STATUS.created).json({
+      status: HTTP_STATUS.created,
+      message: "Account created. Go ahead and signin",
+      createdUser,
+    });
   } catch (e: any) {
     next(e);
   }
@@ -73,7 +80,13 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
       accountType: signedInUser.accountType!!,
     };
     signedInUser.accessToken = genJwtToken(token)!;
-    res.status(HTTP_STATUS.ok).json(signedInUser);
+    res
+      .status(HTTP_STATUS.ok)
+      .json({
+        status: HTTP_STATUS.ok,
+        message: "Signed in",
+        user: signedInUser,
+      });
   } catch (err: any) {
     next(err);
   }

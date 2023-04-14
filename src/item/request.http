@@ -20,7 +20,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDExYjM2Y
 ### recive query param _id, itemName?, price?, itemDescription1?, itemDescription2?, remainingCount?, categories?
 ### { message: string, status: number, item: item }
 ### modify item
-PATCH http://localhost:3000/item/item?_id=6413203ec12cb79c085bae3c&itemName=bbTest&categories=f,z
+PATCH http://localhost:3000/item/item?_id=6413208ec12cb79c085bae42&itemName=bbTest&categories=f,z
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE0NWZkNWZlMzExOTg2NjEwZDY2NDIiLCJlbWFpbEFkZHJlc3MiOiJtbEBnbWFsLmNvbSIsImFjY291bnRUeXBlIjoiU0FMRVMiLCJpYXQiOjE2NzkwNTY5MzR9.koR_2YBxL1z0nzF0DtSQg8SudYi7COIMsUbiYaJy96s
 
 ### sales user only route

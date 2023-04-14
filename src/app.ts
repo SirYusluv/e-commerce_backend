@@ -41,7 +41,11 @@ if (!fs.existsSync(PUBLIC_DIR)) {
 }
 
 app.use((req, res, next) => {
-  const allowedOrigin = ["http://127.0.0.1:5500", "http://127.0.0.1:5555"];
+  const allowedOrigin = [
+    "http://127.0.0.1:5500",
+    "http://127.0.0.1:5555",
+    req.headers.origin!! || "", // allow any origin for test purpose
+  ];
   const origin = req.headers.origin!!;
 
   res.setHeader(
