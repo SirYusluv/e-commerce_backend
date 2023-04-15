@@ -29,10 +29,10 @@ Content-Type: application/json
     "password": "0123456789"
 }
 
-### as query param: topBought?, limited?, limit?, page?
+### as query param: topBought?, limited?, limit?, page?, category?
 ### returns { message: "" | string, status: number, data?: Item[], count?: number }
 ### get items
-GET http://localhost:3000/auth/item?
+GET http://localhost:3000/auth/item?category=women
 
 ### returns { message: "", categories: Category[], status?: number }
 ### query param: sortByReference?: true, limit?: number, count?: number

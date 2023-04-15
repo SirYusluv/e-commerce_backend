@@ -376,9 +376,13 @@ export async function getTopsellingOrLimitedInStockItems(
   skip: number,
   lim: number,
   isTopSelling?: boolean,
-  isLimitedInStock?: boolean
+  isLimitedInStock?: boolean,
+  category?: string
 ) {
+  const categoryDb = await Category.findOne({ category: category });
+
   const itemQuery = Item.find();
+  categoryDb && itemQuery.where("categories", categoryDb._id);
   const count = await itemQuery.clone().countDocuments();
   isTopSelling && itemQuery.sort({ boughtByCount: "desc" });
   isLimitedInStock && itemQuery.sort({ limitedInStock: "asc" });

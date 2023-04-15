@@ -80,13 +80,11 @@ export async function signin(req: Request, res: Response, next: NextFunction) {
       accountType: signedInUser.accountType!!,
     };
     signedInUser.accessToken = genJwtToken(token)!;
-    res
-      .status(HTTP_STATUS.ok)
-      .json({
-        status: HTTP_STATUS.ok,
-        message: "Signed in",
-        user: signedInUser,
-      });
+    res.status(HTTP_STATUS.ok).json({
+      status: HTTP_STATUS.ok,
+      message: "Signed in",
+      user: signedInUser,
+    });
   } catch (err: any) {
     next(err);
   }
@@ -177,7 +175,7 @@ export async function getTopBoughtOrLimited(
   next: NextFunction
 ) {
   try {
-    const { topBought, limited, limit, page } = req.query;
+    const { topBought, limited, limit, page, category } = req.query;
     const response = await getTopsellingOrLimitedInStockItems(
       page ? Number(page.toString()) : 0,
       limit ? Number(limit.toString()) : 10,
@@ -190,7 +188,8 @@ export async function getTopBoughtOrLimited(
         ? true
         : limited?.toString() === "false"
         ? false
-        : undefined
+        : undefined,
+      category ? String(category) : undefined
     );
     res.status(response.status).json(response);
   } catch (err: any) {
