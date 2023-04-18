@@ -33,12 +33,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE0NWZkN
 ### As query: limit?, page?, topSelling?, limitedInStock?
 ### return { message: "" | string, status, data?: Item[], count? }
 ### get items
-POST http://localhost:3000/item/items?limit=5&page=10
+POST http://localhost:3000/item/items
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDE0ZDJiODMxZWNjYWZjOTAxMjMzN2UiLCJlbWFpbEFkZHJlc3MiOiJsYXRAZ21hbC5jb20iLCJhY2NvdW50VHlwZSI6IlVTRVIiLCJpYXQiOjE2NzkwODYyNzV9.sgbuNbr-3f-LeKmw-Qu9yGiptpF_c0IzI-UL8jTcBxA
 Content-Type: application/json
 
 {
-  "itemName": "men"
+  "itemId": "643ab91e7119ac5dce86691e"
 }
 
 ### returns { message: "", categories: Category[], status?: number }
