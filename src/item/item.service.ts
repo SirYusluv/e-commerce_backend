@@ -42,7 +42,9 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
     const categories = await Promise.all(
       (categoriesStrArr.split(",") as string[]).map(async function (category) {
         let fetchedCategory: CategoryType | null;
-        fetchedCategory = await findCategory({ category });
+        fetchedCategory = await findCategory({
+          category: category.toLowerCase(),
+        });
         // create category if not exist
         !fetchedCategory && (fetchedCategory = await createCategory(category));
 
@@ -199,7 +201,7 @@ export async function findCategory({
   const categoryQuery = Category.findOne();
 
   _id && categoryQuery.where("_id", _id);
-  category && categoryQuery.where("category", category);
+  category && categoryQuery.where("category", category.toLowerCase());
 
   return categoryQuery.exec();
 }
@@ -209,7 +211,7 @@ export async function createCategory(category: string) {
     throw new Error(
       `Invalid category provided.${SPLIT_PATTERN}${HTTP_STATUS.badRequest}`
     );
-  return new Category({ category }).save();
+  return new Category({ category: category.toLowerCase() }).save();
 }
 
 // this should be probably be refractored but deadline soon
@@ -283,7 +285,9 @@ export async function getItem(req: Request, res: Response, next: NextFunction) {
     const categories = categoriesQr?.toString(); // actually, just sigle category.
     if (categories) {
       // category here is a string, first get it's id
-      const categoryModel = await Category.findOne({ category: categories });
+      const categoryModel = await Category.findOne({
+        category: categories.toLowerCase(),
+      });
       if (!categoryModel) {
         const response: IResponse = {
           message: "Invalid category provided.",
@@ -379,7 +383,9 @@ export async function getTopsellingOrLimitedInStockItems(
   isLimitedInStock?: boolean,
   category?: string
 ) {
-  const categoryDb = await Category.findOne({ category: category });
+  const categoryDb = await Category.findOne({
+    category: category?.toLowerCase(),
+  });
 
   const itemQuery = Item.find();
   categoryDb && itemQuery.where("categories", categoryDb._id);
