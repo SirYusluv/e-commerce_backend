@@ -40,7 +40,9 @@ export async function addItem(req: Request, res: Response, next: NextFunction) {
     const addedBy = (req.body.user as UserType)._id;
     // convert categories: string[] to ObjectId[]
     const categories = await Promise.all(
-      (categoriesStrArr.split(",") as string[]).map(async function (category) {
+      (
+        (categoriesStrArr as string).toLocaleLowerCase().split(",") as string[]
+      ).map(async function (category) {
         let fetchedCategory: CategoryType | null;
         fetchedCategory = await findCategory({
           category: category.toLowerCase(),
@@ -107,7 +109,7 @@ export async function updateItem(
     const categories =
       categoriesStrArr?.toString() &&
       (await Promise.all(
-        (categoriesStrArr.toString().split(",") as string[]).map(
+        (categoriesStrArr.toString().toLowerCase().split(",") as string[]).map(
           async function (category) {
             let fetchedCategory: CategoryType | null;
             fetchedCategory = await findCategory({ category });
@@ -282,7 +284,7 @@ export async function getItem(req: Request, res: Response, next: NextFunction) {
     }
 
     // search by category if provided
-    const categories = categoriesQr?.toString(); // actually, just sigle category.
+    const categories = categoriesQr?.toString()?.toLowerCase(); // actually, just sigle category.
     if (categories) {
       // category here is a string, first get it's id
       const categoryModel = await Category.findOne({
